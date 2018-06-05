@@ -1,4 +1,5 @@
 import React, { Component, cloneElement } from 'react';
+import { CSSTransitionGroup } from 'react-transition-group'
 import PropTypes from 'prop-types';
 
 class Slider extends Component {
@@ -25,7 +26,16 @@ class Slider extends Component {
       }
     );
     return (
-      <div className="slide-box cleafix">{sliderImg}</div>
+      <div className="slide-box cleafix">
+        <CSSTransitionGroup
+        transitionName="example"
+        transitionEnterTimeout={500}
+        transitionLeave={false}
+        transitionAppear={true}
+        transitionAppearTimeout={500}>
+          {sliderImg}
+        </CSSTransitionGroup>
+      </div>
     )
   }
 }

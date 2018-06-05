@@ -56,7 +56,7 @@ class App extends Component { // 用类的方式创建组件
     this.timerID = setInterval(() => {
       const { state: { imageData, activeIndex}} = this;
       this.setState({ activeIndex: activeIndex === imageData.length - 1 ? 0 : activeIndex + 1});
-    }, 2000)
+    }, 6000)
   }
 
   handleItemChange(item) {
