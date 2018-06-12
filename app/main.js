@@ -8,14 +8,9 @@
 import React, { Component, cloneElement } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
-import Slider from './components/Slider';
-import PrevNext from './components/PrevNext';
-import Navigat from './components/Navigat';
-import style from './css/style.scss';
-import img1 from './assets/1.jpg';
-import img2 from './assets/2.jpg';
-import img3 from './assets/3.jpg';
-import img4 from './assets/4.jpg';
+import { HashRouter, Route, hashHistory, Switch, Link } from 'react-router-dom'
+import Slider from './views/SliderWrap';
+import Note from './views/Note';
 
 
 class App extends Component { // 用类的方式创建组件
@@ -28,67 +23,34 @@ class App extends Component { // 用类的方式创建组件
     //   this.props = props;
     // }
     super(props);
-
     this.state = {
-      imageData: [{
-        url: img1
-      }, {
-        url: img2
-      }, {
-        url: img3
-      }, {
-        url: img4
-      }],
-      activeIndex: 0
-    };
-    this.handleItemChange = this.handleItemChange.bind(this);
-  }
-
-  componentDidMount() {
-    this.sliderStart();
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timerID);
-  }
-
-  sliderStart() {
-    this.timerID = setInterval(() => {
-      const { state: { imageData, activeIndex}} = this;
-      this.setState({ activeIndex: activeIndex === imageData.length - 1 ? 0 : activeIndex + 1});
-    }, 6000)
-  }
-
-  handleItemChange(item) {
-    const { state: { imageData, activeIndex}} = this;
-    let isPrev = item === 'prev';
-    let index = activeIndex;
-    if (item !== 'next' && item !== 'prev') {
-      this.setState({activeIndex: item.activeIndex});
-      return false;
+      href: [{
+              id: 1,
+              name: '轮播图页',
+              url: '/slider'
+            },
+            {
+              id: 2,
+              name: '说明页',
+              url: '/note'
+            }]
     }
-    clearInterval(this.timerID);
-    if (isPrev) {
-      index = index === 0 ? imageData.length - 1 : index - 1
-    } else {
-      index = index === imageData.length - 1 ? 0 : index + 1
-    }
-    this.setState({ activeIndex: index});
-    this.sliderStart();
   }
 
   render() {
-    const { state: { imageData, activeIndex }  } = this;
-    return (
-      <div className="slider">
-        <div className="wrap" id="slide-wrap">
-          <Slider imgData={imageData} activeIndex={activeIndex}></Slider>
-          <PrevNext activeIndex={activeIndex} handleItemChange={this.handleItemChange}></PrevNext>
-          <Navigat imgData={imageData} activeIndex={ activeIndex } handleItemChange={this.handleItemChange} ></Navigat>
-        </div>
-      </div>
+    const { state: { href } } = this;
+    const hrefData = href.map((href, index) => {
+        return <p key={href.id}><Link to={`${href.url}/${href.id}`} activeclassname="active">{href.name}</Link></p>;
+      }
     );
+    // 4.0以后，嵌套的路由需要单独放置在嵌套的根component中去处理路由，否则会一直有warning:
+    // You should not use <Route component> and <Route children> in the same route
+    return (
+      <div className="box">{hrefData}
+        <Route path="/slider/:id" component={Slider} replace />
+        <Route path="/note/:id" component={Note} replace />
+      </div>);
   }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+export default App;

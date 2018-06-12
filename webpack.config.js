@@ -8,7 +8,7 @@ var DEBUG = !process.argv.includes('--release');
 
 module.exports = {
   entry: {
-    app: './app/main.js'
+    app: './app/router/index.js'
   },
   output: {
     path: './build',
